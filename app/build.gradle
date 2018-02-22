@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "24.0.1"
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "com.mycompany.plugins.user"
@@ -23,13 +23,13 @@ android {
                 output.outputFile = new File(apk.parentFile, newName);
             }
 
-//            if (variant.buildType.name == 'debug') {
-//                variant.assemble.doLast {
-//                    exec {
-//                        commandLine '/SDKs/Android3/platform-tools/adb', 'push', 'build/outputs/apk/MyPlugin.apk', '/sdcard/DroidScript/Plugins/MyPlugin.apk'
-//                    }
-//                }
-//            }
+            if (variant.buildType.name == 'debug') {
+                variant.assemble.doLast {
+                    exec {
+                        commandLine 'cmd', '/C', 'start', 'Setup', 'ExtUI', 'root'
+                    }
+                }
+            }
         }
     }
 
