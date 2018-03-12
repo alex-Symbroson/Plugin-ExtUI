@@ -6,8 +6,15 @@ app.CreateExtUI = function() {
 //Plugin wrapper class.
 function ExtUI() {
 
-    this.GetClasses = function() { return _classes; }
-    this.GetVersion = function() { return _float(plg.Send("Plg.GetVersion", _, _, _, _, _, _, _, _)); }
+    var width = app.GetScreenWidth();
+    var height = app.GetScreenHeight();
+
+    this.GetScreenWidth = function() { return width; }
+    this.GetScreenHeight = function() { return height; }
+
+    //this.GetClasses = function() { return _classes; }
+    this.GetType = function() { return "Plugin"; };
+    this.GetVersion = function() { return _flot(plg.Send("Plg.GetVersion", _, _, _, _, _, _, _, _)); }
     //this.GetMethods = function(classSimpleName) { return plg.Send("Plg.GetMethods", classSimpleName, _, _, _, _, _, _, _).split("|"); }
     this.GetControls = function() { var lst = []; for(var i in this) if(i.startsWith("Create")) lst.push(i.slice(6)); return lst; }
 
@@ -67,87 +74,83 @@ function ExtUI() {
     function _ExtObj(id) {
         this.id = id;
 
-        this.IsEnabled                        = function()                         { return _bool(plg.SendObj("Obj.IsEnabled",                         this, _, _, _, _, _, _, _, _)); }
-        this.SetEnabled                       = function(bool)                     { return _bool(plg.SendObj("Obj.SetEnabled",                        this, bool, _, _, _, _, _, _, _, _)); }
-/*
-        this.GetWidth                         = function()                         { return plg.SendObj("Obj.GetWidth",                          this, _, _, _, _, _, _, _, _); }
-        this.GetHeight                        = function()                         { return plg.SendObj("Obj.GetHeight",                         this, _, _, _, _, _, _, _, _); }
-        this.SetFocusable                     = function(bool)                     { return plg.SendObj("Obj.SetFocusable",                      this, bool, _, _, _, _, _, _, _); }
-        this.GetId                            = function()                         { return plg.SendObj("Obj.GetId",                             this, _, _, _, _, _, _, _, _); }
-        this.GetLeft                          = function()                         { return plg.SendObj("Obj.GetLeft",                           this, _, _, _, _, _, _, _, _); }
-        this.GetRight                         = function()                         { return plg.SendObj("Obj.GetRight",                          this, _, _, _, _, _, _, _, _); }
-        this.IsFocusable                      = function()                         { return plg.SendObj("Obj.IsFocusable",                       this, _, _, _, _, _, _, _, _); }
-        this.OnKeyDown                        = function(int, KeyEvent)            { return plg.SendObj("Obj.OnKeyDown",                         this, int, KeyEvent, _, _, _, _, _, _); }
-        this.OnKeyUp                          = function(int, KeyEvent)            { return plg.SendObj("Obj.OnKeyUp",                           this, int, KeyEvent, _, _, _, _, _, _); }
-        this.OnTouchEvent                     = function()                         { return plg.SendObj("Obj.OnTouchEvent",                      this, MotionEvent, _, _, _, _, _, _, _); }
-        this.SetScrollBarStyle                = function()                         { return plg.SendObj("Obj.SetScrollBarStyle",                 this, int, _, _, _, _, _, _, _); }
-        this.Animate                          = function()                         { return plg.SendObj("Obj.Animate",                           this, _, _, _, _, _, _, _, _); }
-        this.BringToFront                     = function()                         { return plg.SendObj("Obj.bringToFront",                      this, _, _, _, _, _, _, _, _); }
-        this.ClearAnimation                   = function()                         { return plg.SendObj("Obj.ClearAnimation",                    this, _, _, _, _, _, _, _, _); }
-        this.ClearFocus                       = function()                         { return plg.SendObj("Obj.ClearFocus",                        this, _, _, _, _, _, _, _, _); }
-        this.DispatchTouchEvent               = function(MotionEvent)              { return plg.SendObj("Obj.DispatchTouchEvent",                this, MotionEvent, _, _, _, _, _, _, _); }
-        this.FindFocus                        = function()                         { return plg.SendObj("Obj.FindFocus",                         this, _, _, _, _, _, _, _, _); }
-        this.GetAlpha                         = function()                         { return plg.SendObj("Obj.GetAlpha",                          this, _, _, _, _, _, _, _, _); }
-        this.GetBottom                        = function()                         { return plg.SendObj("Obj.GetBottom",                         this, _, _, _, _, _, _, _, _); }
-        this.GetDefaultSize                   = function(int, int)                 { return plg.SendObj("Obj.GetDefaultSize",                    this, int, int, _, _, _, _, _, _); }
-        this.GetLayerType                     = function()                         { return plg.SendObj("Obj.GetLayerType",                      this, _, _, _, _, _, _, _, _); }
-        this.GetLayoutParams                  = function()                         { return plg.SendObj("Obj.GetLayoutParams",                   this, _, _, _, _, _, _, _, _); }
-        this.GetMeasuredHeight                = function()                         { return plg.SendObj("Obj.GetMeasuredHeight",                 this, _, _, _, _, _, _, _, _); }
-        this.GetMeasuredWidth                 = function()                         { return plg.SendObj("Obj.GetMeasuredWidth",                  this, _, _, _, _, _, _, _, _); }
-        this.GetRotation                      = function()                         { return plg.SendObj("Obj.GetRotation",                       this, _, _, _, _, _, _, _, _); }
-        this.GetScaleX                        = function()                         { return plg.SendObj("Obj.GetScaleX",                         this, _, _, _, _, _, _, _, _); }
-        this.GetScaleY                        = function()                         { return plg.SendObj("Obj.GetScaleY",                         this, _, _, _, _, _, _, _, _); }
-        this.GetScrollX                       = function()                         { return plg.SendObj("Obj.GetScrollX",                        this, _, _, _, _, _, _, _, _); }
-        this.GetScrollY                       = function()                         { return plg.SendObj("Obj.GetScrollY",                        this, _, _, _, _, _, _, _, _); }
-        this.GetTop                           = function()                         { return plg.SendObj("Obj.GetTop",                            this, _, _, _, _, _, _, _, _); }
-        this.GetVisibility                    = function()                         { return plg.SendObj("Obj.GetVisibility",                     this, _, _, _, _, _, _, _, _); }
-        this.IsFocused                        = function()                         { return plg.SendObj("Obj.IsFocused",                         this, _, _, _, _, _, _, _, _); }
-        this.IsPressed                        = function()                         { return plg.SendObj("Obj.IsPressed",                         this, _, _, _, _, _, _, _, _); }
-        this.IsSelected                       = function()                         { return plg.SendObj("Obj.IsSelected",                        this, _, _, _, _, _, _, _, _); }
-        this.IsShown                          = function()                         { return plg.SendObj("Obj.IsShown",                           this, _, _, _, _, _, _, _, _); }
-        this.OnKeyLongPress                   = function(int, KeyEvent)            { return plg.SendObj("Obj.OnKeyLongPress",                    this, int, KeyEvent, _, _, _, _, _, _); }
-        this.PerformClick                     = function()                         { return plg.SendObj("Obj.PerformClick",                      this, _, _, _, _, _, _, _, _); }
-        this.PerformHapticFeedback            = function(int)                      { return plg.SendObj("Obj.PerformHapticFeedback",             this, int, _, _, _, _, _, _, _); }
-        this.PlaySoundEffect                  = function(int)                      { return plg.SendObj("Obj.PlaySoundEffect",                   this, int, _, _, _, _, _, _, _); }
-        this.ScrollBy                         = function(int, int)                 { return plg.SendObj("Obj.ScrollBy",                          this, int, int, _, _, _, _, _, _); }
-        this.ScrollTo                         = function(int, int)                 { return plg.SendObj("Obj.ScrollTo",                          this, int, int, _, _, _, _, _, _); }
-        this.SetAlpha                         = function(float)                    { return plg.SendObj("Obj.SetAlpha",                          this, float, _, _, _, _, _, _, _); }
-        this.SetAnimation                     = function(Animation)                { return plg.SendObj("Obj.SetAnimation",                      this, Animation, _, _, _, _, _, _, _); }
-        this.SetBackground                    = function(Drawable)                 { return plg.SendObj("Obj.SetBackground",                     this, Drawable, _, _, _, _, _, _, _); }
-        this.SetBackgroundColor               = function(int)                      { return plg.SendObj("Obj.SetBackgroundColor",                this, int, _, _, _, _, _, _, _); }
-        this.SetBottom                        = function(pos)                      { return plg.SendObj("Obj.SetBottom",                         this, pos, _, _, _, _, _, _, _); }
-        this.SetClickable                     = function(bool)                     { return plg.SendObj("Obj.SetClickable",                      this, bool, _, _, _, _, _, _, _); }
-        this.SetHorizontalScrollBarEnabled    = function(bool)                     { return plg.SendObj("Obj.SetHorizontalScrollBarEnabled",     this, bool, _, _, _, _, _, _, _); }
-        this.SetLeft                          = function(pos)                      { return plg.SendObj("Obj.SetLeft",                           this, pos, _, _, _, _, _, _, _); }
-        this.SetLeftTopRightBottom            = function(left, top, right, bottom) { return plg.SendObj("Obj.SetLeftTopRightBottom",             this, left, top, right, bottom, _, _, _, _); }
-        this.SetMinimumHeight                 = function(int)                      { return plg.SendObj("Obj.SetMinimumHeight",                  this, int, _, _, _, _, _, _, _); }
-        this.SetMinimumWidth                  = function(int)                      { return plg.SendObj("Obj.SetMinimumWidth",                   this, int, _, _, _, _, _, _, _); }
-        this.SetOnKeyListener                 = function(OnKeyListener)            { return plg.SendObj("Obj.SetOnKeyListener",                  this, OnKeyListener, _, _, _, _, _, _, _); }
-        this.SetOnLongClickListener           = function(OnLongClickListener)      { return plg.SendObj("Obj.SetOnLongClickListener",            this, OnLongClickListener, _, _, _, _, _, _, _); }
-        this.SetOnScrollChangeListener        = function(OnScrollChangeListener)   { return plg.SendObj("Obj.SetOnScrollChangeListener",         this, OnScrollChangeListener, _, _, _, _, _, _, _); }
-        */
-        this.SetOnTouch                       = function(callb)                    { return _bool(plg.SendObj("Obj.SetOnTouch",                  this, _Cbm(this, callb), _, _, _, _, _, _, _)); }
-        /*
-        this.SetPadding                       = function(left, top, right, bottom) { return plg.SendObj("Obj.SetPadding",                        this, left, top, right, bottom, _, _, _, _); }
-        this.SetRotation                      = function(float)                    { return plg.SendObj("Obj.SetRotation",                       this, float, _, _, _, _, _, _, _); }
-        this.SetScaleX                        = function(x)                        { return plg.SendObj("Obj.SetScaleX",                         this, x, _, _, _, _, _, _, _); }
-        this.SetScaleY                        = function(y)                        { return plg.SendObj("Obj.SetScaleY",                         this, y, _, _, _, _, _, _, _); }
-        this.SetScrollBarSize                 = function(size)                     { return plg.SendObj("Obj.SetScrollBarSize",                  this, size, _, _, _, _, _, _, _); }
-        this.SetScrollX                       = function(x)                        { return plg.SendObj("Obj.SetScrollX",                        this, x, _, _, _, _, _, _, _); }
-        this.SetScrollY                       = function(y)                        { return plg.SendObj("Obj.SetScrollY",                        this, y, _, _, _, _, _, _, _); }
-        this.SetSelected                      = function(bool)                     { return plg.SendObj("Obj.SetSelected",                       this, bool, _, _, _, _, _, _, _); }
-        this.SetTop                           = function(pos)                      { return plg.SendObj("Obj.SetTop",                            this, pos, _, _, _, _, _, _, _); }
-        this.SetVerticalScrollBarEnabled      = function(bool)                     { return plg.SendObj("Obj.SetVerticalScrollBarEnabled",       this, bool, _, _, _, _, _, _, _); }
-        this.SetVerticalScrollbarPosition     = function(pos)                      { return plg.SendObj("Obj.SetVerticalScrollbarPosition",      this, pos, _, _, _, _, _, _, _); }
-        this.SetVisibility                    = function(int)                      { return plg.SendObj("Obj.SetVisibility",                     this, int, _, _, _, _, _, _, _); }
-        this.StartAnimation                   = function(Animation)                { return plg.SendObj("Obj.StartAnimation",                    this, Animation, _, _, _, _, _, _, _); }
-*/
+        this.BringToFront = function() { return _void(plg.SendObj("Obj.BringToFront", this, _, _, _, _, _, _, _, _)); }
+        /*this.ClearAnimation = function() { return _void(plg.SendObj("Obj.ClearAnimation", this, _, _, _, _, _, _, _, _)); }*/
+        this.ClearFocus = function() { return _void(plg.SendObj("Obj.ClearFocus", this, _, _, _, _, _, _, _, _)); }
+        /*this.DispatchTouchEvent = function(MotionEvent) { return _bool(plg.SendObj("Obj.DispatchTouchEvent", this, MotionEvent, _, _, _, _, _, _, _)); }*/
+        this.GetAlpha = function() { return _flot(plg.SendObj("Obj.GetAlpha", this, _, _, _, _, _, _, _, _)); }
+        this.GetBottom = function() { return _heig(plg.SendObj("Obj.GetBottom", this, _, _, _, _, _, _, _, _)); }
+        /*this.GetDefaultSize = function(intg, intg) { return _intg(plg.SendObj("Obj.GetDefaultSize", this, intg, intg, _, _, _, _, _, _)); }*/
+        this.GetHeight = function() { return _heig(plg.SendObj("Obj.GetHeight", this, _, _, _, _, _, _, _, _)); }
+        this.GetId = function() { return _intg(plg.SendObj("Obj.GetId", this, _, _, _, _, _, _, _, _)); }
+        /*this.GetLayerType = function() { return _intg(plg.SendObj("Obj.GetLayerType", this, _, _, _, _, _, _, _, _)); }*/
+        this.GetLeft = function() { return _widh(plg.SendObj("Obj.GetLeft", this, _, _, _, _, _, _, _, _)); }
+        /*this.GetMeasuredHeight = function() { return _intg(plg.SendObj("Obj.GetMeasuredHeight", this, _, _, _, _, _, _, _, _)); }*/
+        /*this.GetMeasuredWidth = function() { return _intg(plg.SendObj("Obj.GetMeasuredWidth", this, _, _, _, _, _, _, _, _)); }*/
+        this.GetRight = function() { return _widh(plg.SendObj("Obj.GetRight", this, _, _, _, _, _, _, _, _)); }
+        this.GetRotation = function() { return _flot(plg.SendObj("Obj.GetRotation", this, _, _, _, _, _, _, _, _)); }
+        this.GetScaleX = function() { return _flot(plg.SendObj("Obj.GetScaleX", this, _, _, _, _, _, _, _, _)); }
+        this.GetScaleY = function() { return _flot(plg.SendObj("Obj.GetScaleY", this, _, _, _, _, _, _, _, _)); }
+        this.GetScrollX = function() { return _intg(plg.SendObj("Obj.GetScrollX", this, _, _, _, _, _, _, _, _)); }
+        this.GetScrollY = function() { return _intg(plg.SendObj("Obj.GetScrollY", this, _, _, _, _, _, _, _, _)); }
+        this.GetTop = function() { return _heig(plg.SendObj("Obj.GetTop", this, _, _, _, _, _, _, _, _)); }
+        this.GetVisibility = function() { return _intg(plg.SendObj("Obj.GetVisibility", this, _, _, _, _, _, _, _, _)); }
+        this.GetWidth = function() { return _widh(plg.SendObj("Obj.GetWidth", this, _, _, _, _, _, _, _, _)); }
+        this.IsEnabled = function() { return _bool(plg.SendObj("Obj.IsEnabled", this, _, _, _, _, _, _, _, _)); }
+        this.IsFocusable = function() { return _bool(plg.SendObj("Obj.IsFocusable", this, _, _, _, _, _, _, _, _)); }
+        this.IsFocused = function() { return _bool(plg.SendObj("Obj.IsFocused", this, _, _, _, _, _, _, _, _)); }
+        this.IsPressed = function() { return _bool(plg.SendObj("Obj.IsPressed", this, _, _, _, _, _, _, _, _)); }
+        this.IsSelected = function() { return _bool(plg.SendObj("Obj.IsSelected", this, _, _, _, _, _, _, _, _)); }
+        this.IsShown = function() { return _bool(plg.SendObj("Obj.IsShown", this, _, _, _, _, _, _, _, _)); }
+        /*this.OnKeyDown = function(intg, KeyEvent) { return _bool(plg.SendObj("Obj.OnKeyDown", this, intg, KeyEvent, _, _, _, _, _, _)); }*/
+        /*this.OnKeyLongPress = function(intg, KeyEvent) { return _bool(plg.SendObj("Obj.OnKeyLongPress", this, intg, KeyEvent, _, _, _, _, _, _)); }*/
+        /*this.OnKeyUp = function(intg, KeyEvent) { return _bool(plg.SendObj("Obj.OnKeyUp", this, intg, KeyEvent, _, _, _, _, _, _)); }*/
+        /*this.OnTouchEvent = function(MotionEvent) { return _bool(plg.SendObj("Obj.OnTouchEvent", this, MotionEvent, _, _, _, _, _, _, _)); }*/
+        this.PerformClick = function() { return _bool(plg.SendObj("Obj.PerformClick", this, _, _, _, _, _, _, _, _)); }
+        this.PerformHapticFeedback = function(intg) { return _bool(plg.SendObj("Obj.PerformHapticFeedback", this, intg, _, _, _, _, _, _, _)); }
+        this.PlaySoundEffect = function(/*intg*/) { return _void(plg.SendObj("Obj.PlaySoundEffect", this, /*intg*/_, _, _, _, _, _, _, _)); }
+        this.ScrollBy = function(intg, intg) { return _void(plg.SendObj("Obj.ScrollBy", this, intg, intg, _, _, _, _, _, _)); }
+        this.ScrollTo = function(intg, intg) { return _void(plg.SendObj("Obj.ScrollTo", this, intg, intg, _, _, _, _, _, _)); }
+        this.SetAlpha = function(flot) { return _void(plg.SendObj("Obj.SetAlpha", this, flot, _, _, _, _, _, _, _)); }
+        /*this.SetAnimation = function(Animation) { return _void(plg.SendObj("Obj.SetAnimation", this, Animation, _, _, _, _, _, _, _)); }*/
+        /*this.SetBackground = function(Drawable) { return _void(plg.SendObj("Obj.SetBackground", this, Drawable, _, _, _, _, _, _, _)); }*/
+        this.SetBackgroundColor = function(intg) { return _void(plg.SendObj("Obj.SetBackgroundColor", this, intg, _, _, _, _, _, _, _)); }
+        this.SetBottom = function(flot) { return _void(plg.SendObj("Obj.SetBottom", this, _toheig(flot), _, _, _, _, _, _, _)); }
+        this.SetClickable = function(bool) { return _void(plg.SendObj("Obj.SetClickable", this, bool, _, _, _, _, _, _, _)); }
+        this.SetEnabled = function(bool) { return _void(plg.SendObj("Obj.SetEnabled", this, bool, _, _, _, _, _, _, _)); }
+        this.SetFocusable = function(bool) { return _void(plg.SendObj("Obj.SetFocusable", this, bool, _, _, _, _, _, _, _)); }
+        this.SetHorizontalScrollBarEnabled = function(bool) { return _void(plg.SendObj("Obj.SetHorizontalScrollBarEnabled", this, bool, _, _, _, _, _, _, _)); }
+        this.SetLeft = function(flot) { return _void(plg.SendObj("Obj.SetLeft", this, _towidh(flot), _, _, _, _, _, _, _)); }
+        //this.SetLeftTopRightBottom = function(intg, intg, intg, intg) { return _void(plg.SendObj("Obj.SetLeftTopRightBottom", this, intg, intg, intg, intg, _, _, _, _)); }
+        /*this.SetMinimumHeight = function(flot) { return _void(plg.SendObj("Obj.SetMinimumHeight", this, _toheig(flot), _, _, _, _, _, _, _)); }*/
+        /*this.SetMinimumWidth = function(flot) { return _void(plg.SendObj("Obj.SetMinimumWidth", this, _towidh(flot), _, _, _, _, _, _, _)); }*/
+        /*this.SetOnKey = function(OnKey) { return _void(plg.SendObj("Obj.SetOnKey", this, _Cbm(this, OnKey), _, _, _, _, _, _, _)); }*/
+        this.SetOnClick = function(OnClick) { return _void(plg.SendObj("Obj.SetOnClick", this, _Cbm(this, OnClick), _, _, _, _, _, _, _)); }
+        this.SetOnLongClick = function(OnLongClick) { return _void(plg.SendObj("Obj.SetOnLongClick", this, _Cbm(this, OnLongClick), _, _, _, _, _, _, _)); }
+        /*this.SetOnScrollChange = function(OnScrollChange) { return _void(plg.SendObj("Obj.SetOnScrollChange", this, _Cbm(this, OnScrollChange), _, _, _, _, _, _, _)); }*/
+        /*this.SetOnTouch = function(OnTouch) { return _void(plg.SendObj("Obj.SetOnTouch", this, _Cbm(this, OnTouch), _, _, _, _, _, _, _)); }*/
+        this.SetPadding = function(flot, flot, flot, flot) { return _void(plg.SendObj("Obj.SetPadding", this, _towidh(flot), _toheig(flot), _towidh(flot), _toheig(flot), _, _, _, _)); }
+        this.SetRight = function(flot) { return _void(plg.SendObj("Obj.SetRight", this, _towidh(flot), _, _, _, _, _, _, _)); }
+        this.SetRotation = function(flot) { return _void(plg.SendObj("Obj.SetRotation", this, flot, _, _, _, _, _, _, _)); }
+        this.SetScaleX = function(flot) { return _void(plg.SendObj("Obj.SetScaleX", this, flot, _, _, _, _, _, _, _)); }
+        this.SetScaleY = function(flot) { return _void(plg.SendObj("Obj.SetScaleY", this, flot, _, _, _, _, _, _, _)); }
+        this.SetScrollBarSize = function(intg) { return _void(plg.SendObj("Obj.SetScrollBarSize", this, intg, _, _, _, _, _, _, _)); }
+        this.SetScrollBarStyle = function(style) { return _void(plg.SendObj("Obj.SetScrollBarStyle", this, style, _, _, _, _, _, _, _)); }
+        this.SetScrollX = function(flot) { return _void(plg.SendObj("Obj.SetScrollX", this, _towidh(flot), _, _, _, _, _, _, _)); }
+        this.SetScrollY = function(flot) { return _void(plg.SendObj("Obj.SetScrollY", this, _toheig(flot), _, _, _, _, _, _, _)); }
+        this.SetSelected = function(bool) { return _void(plg.SendObj("Obj.SetSelected", this, bool, _, _, _, _, _, _, _)); }
+        this.SetTop = function(flot) { return _void(plg.SendObj("Obj.SetTop", this, _toheig(flot), _, _, _, _, _, _, _)); }
+        this.SetVerticalScrollBarEnabled = function(bool) { return _void(plg.SendObj("Obj.SetVerticalScrollBarEnabled", this, bool, _, _, _, _, _, _, _)); }
+        this.SetVerticalScrollbarPosition = function(intg) { return _void(plg.SendObj("Obj.SetVerticalScrollbarPosition", this, intg, _, _, _, _, _, _, _)); }
+        this.SetVisibility = function(state) { return _void(plg.SendObj("Obj.SetVisibility", this, state, _, _, _, _, _, _, _)); }
+        /*this.StartAnimation = function(Animation) { return _void(plg.SendObj("Obj.StartAnimation", this, Animation, _, _, _, _, _, _, _)); }*/
     }
 
     function Swt(id) {
         var obj = new _ExtObj(id);
-        obj.SetChecked = function(bool) { return _bool(plg.SendObj("Swt.SetChecked", this, bool, _, _, _, _, _, _, _)); }
-        obj.GetChecked = function()     { return _bool(plg.SendObj("Swt.GetChecked", this, _, _, _, _, _, _, _, _)); }
+        obj.GetType = function() { return "Switch"; };
+        obj.SetChecked = function(bool) { return _bool(plg.SendObj("Swt.SetChecked", this, bool, _, _, _, _, _, _, _)); };
+        obj.GetChecked = function()     { return _bool(plg.SendObj("Swt.GetChecked", this, _, _, _, _, _, _, _, _)); };
         return obj;
     }
 
@@ -161,17 +164,26 @@ function ExtUI() {
         return "_extCallb[" + i.toString() + "]";
     }
 
-    function _int(v)   { return v? parseInt(v) : 0; }
-    function _bool(v)  { return v? v == "1" : false; }
-    function _float(v) { return v? parseFloat(v) : 0; }
-    function _list(v)  { return v? JSON.stringify(v) : []; }
-    function _obj(v)   { return v? JSON.stringify(v) : {}; }
+    function _void(v) { return; }
+    function _intg(v) { return v? parseInt(v) : 0; }
+    function _bool(v) { return v? v == "1" : false; }
+    function _flot(v) { return v? parseFloat(v) : 0; }
+    function _list(v) { return v? JSON.parse(v) : []; }
+    function _objc(v) { return v? JSON.parse(v) : {}; }
+    function _widh(v) { return _intg(v)/width; }
+    function _heig(v) { return _intg(v)/height; }
+
+    function _towidh(v) { return Math.floor(v*width); }
+    function _toheig(v) { return Math.floor(v*height); }
+    function _tolist(v) { return v? JSON.stringify(v) : []; }
+    function _toobjc(v) { return v? JSON.stringify(v) : {}; }
+
 
 
     const _ = "";
 
-    var options = "",
-        _classes = [
+    var options = ""
+        /*, _classes = [
         "AbsListView","AbsoluteLayout","AbsSeekBar","AbsSpinner","AccessibilityIterators",
         "ActionMenuPresenter","ActionMenuView","ActivityChooserModel","ActivityChooserView",
         "Adapter","AdapterView","AdapterViewAnimator","AdapterViewFlipper","Advanceable",
@@ -202,7 +214,7 @@ function ExtUI() {
         "TimePickerSpinnerDelegate","Toast","ToggleButton","Toolbar","Toolbar_Accessor","TwoLineListItem",
         "VideoView","ViewAnimator","ViewFlipper","ViewSwitcher","WrapperListAdapter","YearPickerView",
         "ZoomButton","ZoomButtonsController","ZoomControls"
-    ];
+    ]*/;
 
     var plg = _CreatePlugin("ru.starport.plugins.user.ExtUI", options);
 }

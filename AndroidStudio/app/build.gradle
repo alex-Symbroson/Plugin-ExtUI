@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "ru.startport.plugins.user"
-        minSdkVersion 8
+        minSdkVersion 12
         targetSdkVersion 26
     }
 
